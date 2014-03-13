@@ -74,7 +74,7 @@ void tech_free(void* ptr)
 void* tech_realloc(void* ptr, uint32 size)
 {
 	void* new_ptr;
-	new_ptr = malloc(size);
+	new_ptr = tech_malloc(size);
 
 	memcpy(new_ptr, ptr, size);
 	tech_free(ptr);
