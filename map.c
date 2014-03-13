@@ -59,6 +59,8 @@ phashnode_t map_find(phashmap_t hm, void* key)
 	
 	index = hm->hash(key, hm->size);
 
+	if (!hm->buckets[index]) return NULL;
+
 	for (node = hm->buckets[index]->first; node; node = node->next) {
 		phashnode_t item = (phashnode_t)node;
 
