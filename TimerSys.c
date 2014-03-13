@@ -29,29 +29,29 @@
 
 enum Month
 {
-    January,
-    February,
-    March,
-    April,
-    May,
-    June,
-    July,
-    August,
-    September,
-    October,
-    November,
-    December
+	January,
+	February,
+	March,
+	April,
+	May,
+	June,
+	July,
+	August,
+	September,
+	October,
+	November,
+	December
 };
 
 enum Day
 {
-    Monday,
-    Tuesday,
-    Wednesday,
-    Thursday,
-    Friday,
-    Saturday,
-    Sunday
+	Monday,
+	Tuesday,
+	Wednesday,
+	Thursday,
+	Friday,
+	Saturday,
+	Sunday
 };
 
 timeval_t start;
@@ -194,9 +194,7 @@ bool tech_isLeapYear(uint16 yy)
 
 void tech_gettimeofday(timeval_t *tv)
 {
-	int32 epoch;
-
-	epoch = Time_dateToEpoch(&tm_current);
+	int32 epoch = Time_dateToEpoch(&tm_current);
 	tv->tv_sec = epoch;
 	tv->tv_usec = elapsed;
 }

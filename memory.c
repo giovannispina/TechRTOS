@@ -23,36 +23,66 @@
 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef __LIST_H__
-#define __LIST_H__
+#include <assert.h>
 
-#include <Types.h>
+phashmap_t memory;
 
-typedef struct node_t {
-	struct node_t* next;
-	struct node_t* previous;
-	void* pdata;
-} node_t;
+int16 compare(void* ptr, void* ptr2)
+{
+	return (ptr == ptr2) ? 0 : 1;
+}
 
-typedef node_t* pnode_t;
+void tech_memory_init()
+{
+	MM_Init();
 
-typedef struct list_t {
-	pnode_t first;
-	pnode_t last;
-	uint16 size;
-	uint16 node_type;
-} list_t;
+	memory = map_create(10, NULL, &compare);
+}
 
-typedef struct list_t* plist_t;
+void* tech_malloc(uint32 size)
+{
+	void* ptr;
 
-plist_t	list_new();
-void	list_destroy(plist_t list);
-uint16	list_size(plist_t list);
-pnode_t	list_begin(plist_t list);
-pnode_t	list_insert(plist_t list, void* pdata);
-pnode_t	list_insert_after(plist_t list, pnode_t node, void* pdata);
-bool	list_erase(plist_t list, pnode_t node);
-void	list_foreach(plist_t list, void (*func)(void*));
-pnode_t	list_find(plist_t list, int (*func)(void*, void*), void* pdata);
+	ptr = Malloc(size);
+	assert (ptr);
 
-#endif /* __LIST_H__ */
+	map_insert(memory, ptr, (void*)size);
+	return ptr;
+}
+
+void* tech_calloc(uint32 value, uint32 size)
+{
+	void* ptr;
+
+	ptr = Malloc(size);
+	assert (ptr);
+
+	memset(ptr, value, size);
+	map_insert(memory, ptr, (void*)size);
+	return ptr;
+}
+
+void tech_free(void* ptr)
+{
+	phashnode_t node;
+
+	node = map_find(memory, ptr);
+	assert (node);
+	FreeMem(ptr, (uint32)node->value);
+}
+
+void* tech_realloc(void* ptr, uint32 size)
+{
+	void* new_ptr;
+	new_ptr = malloc(size);
+
+	memcpy(new_ptr, ptr, size);
+	tech_free(ptr);
+	return new_ptr;
+}
+
+void tech_freeAll()
+{
+	map_destroy(memory);
+	MM_TotalFreeMemSize();
+}

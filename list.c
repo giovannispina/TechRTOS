@@ -39,7 +39,20 @@ plist_t list_new()
 	list->first = NULL;
 	list->last = NULL;
 
+	list->node_type = sizeof(node_t);
+
 	return list;
+}
+
+void list_destroy(plist_t list)
+{
+	pnode_t node;
+	if (!list) return;
+
+	for (node = list->first; node; node = node->next)
+		FreeMem((void*)node, sizeof(node_t));
+	
+	FreeMem((void*)list, sizeof(list_t));
 }
 
 uint16 list_size(plist_t list)
@@ -52,11 +65,11 @@ pnode_t list_begin(plist_t list)
 	return list->first;
 }
 
-pnode_t node_create(void* pdata)
+pnode_t node_create(plist_t list, void* pdata)
 {
 	pnode_t node;
 	
-	node = (pnode_t) Malloc(sizeof(node_t));
+	node = (pnode_t) Malloc(list->node_type);
 
 	if (!node)
 		return NULL;
@@ -75,7 +88,7 @@ pnode_t list_insert(plist_t list, void* pdata)
 	if (!list)
 		return NULL;
 
-	node = node_create(pdata);
+	node = node_create(list, pdata);
 
 	if (!list->first)
 		list->first = list->last = node;
@@ -95,7 +108,7 @@ pnode_t list_insert_after(plist_t list, pnode_t node, void* pdata)
 	if (!list)
 		return NULL;
 
-	newnode = node_create(pdata);
+	newnode = node_create(list, pdata);
 
 	if (list->last == node) {
 		list->last->next = newnode;
@@ -156,7 +169,7 @@ void list_foreach(plist_t list, void (*func)(void*))
 pnode_t list_find(plist_t list, int (*func)(void*, void*), void *pdata)
 {
 	pnode_t node;
-	if (!list) return;
+	if (!list) return NULL;
 
 	for (node = list->first; node; node = node->next) {
 		if (!func(node->pdata, pdata))

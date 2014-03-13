@@ -25,6 +25,9 @@
 
 #include <TechRTOS.h>
 
+#pragma funcall main task1
+#pragma funcall main task2
+
 sbit LCD_RS at LATB4_bit;
 sbit LCD_EN at LATB5_bit;
 sbit LCD_D4 at LATB0_bit;
@@ -75,10 +78,10 @@ void task1(void* params)
 	static char* website;
 	static char* text;
 
-	text = Malloc((strlen_rom(text_rom)+1)*sizeof(char));
+	text = tech_malloc((strlen_rom(text_rom)+1)*sizeof(char));
 	strcpy_rom(text, text_rom);
 
-	website = Malloc((strlen_rom(website_rom)+1)*sizeof(char));
+	website = tech_malloc((strlen_rom(website_rom)+1)*sizeof(char));
 	strcpy_rom(website, website_rom);
 
 	for (;; yield()) {
@@ -90,15 +93,16 @@ void task1(void* params)
 void task2(void* params)
 {
 	uint8* var = (uint8*) params;
-	static uint32 ticks, current;
+	uint32 ticks, current;
 
 	ticks = tech_getTicks();
-	for (;; yield()) {
+	for (;;) {
 		current = tech_getTicks();
 
 		if (current-ticks > 1000) {
 			ticks = current;
 			*var = !*var;
+			yield();
 		}
 	}
 }
@@ -109,9 +113,9 @@ void interrupt()
 	{
 		tech_timer();
 		
-		INTCON.TMR0IE	= 1;
-		INTCON.T0IF		= 0;
-		TMR0L			= 56;
+		INTCON.TMR0IE = 1;
+		INTCON.T0IF = 0;
+		TMR0L = 56;
 	}
 }
 
@@ -123,26 +127,25 @@ void main()
 	pcontext_t p1;
 
 	// timer settings
-	TMR0L			= 56;
-	TMR0H			= 0;
-	T0CON.PSA		= 1;
-	T0CON.T0PS0		= 0;
-	T0CON.T0PS1		= 0;
-	T0CON.T0PS2		= 0;
-	T0CON.T0CS		= 0;
-	T0CON.T0SE		= 0;
-	T0CON.T08BIT	= 1;
+	TMR0L = 56;
+	TMR0H = 0;
+	T0CON.PSA = 1;
+	T0CON.T0PS0 = 0;
+	T0CON.T0PS1 = 0;
+	T0CON.T0PS2 = 0;
+	T0CON.T0CS = 0;
+	T0CON.T0SE = 0;
+	T0CON.T08BIT = 1;
 
 	// techRTOS init
 	tech_init();
 	tech_setInc(100); // 100 us
 
 	// enable interrupts
-	T0CON.T08BIT	= 1;
-	T0CON.TMR0ON	= 1;
-	INTCON.GIE		= 1;
-	INTCON.TMR0IE	= 1;
-	INTCON.T0IF		= 0;
+	T0CON.TMR0ON = 1;
+	INTCON.GIE = 1;
+	INTCON.TMR0IE = 1;
+	INTCON.T0IF = 0;
 
 	Lcd_Init();
 	Lcd_Cmd(_LCD_CLEAR);
@@ -154,4 +157,5 @@ void main()
 	p2 = tech_cxt(&task2, &resource, 5);
 
 	tech_run();
+	tech_drop();
 }

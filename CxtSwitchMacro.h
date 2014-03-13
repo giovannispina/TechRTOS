@@ -29,9 +29,6 @@
 #define CXT_MIN_SIZE 43
 #define MAX_STACK_SIZE 31
 
-#define disableInt()	INTCON.GIEH = 0;
-#define enableInt()		INTCON.GIEH = 1;
-
 #define push(t)\
 {\
 	asm	MOVFF t, POSTINC0;\

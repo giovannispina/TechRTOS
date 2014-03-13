@@ -28,8 +28,8 @@
 
 volatile pcontext_t current_cxt		= NULL;
 volatile pcontext_t main_cxt		= NULL;
-plist_t cxtlist						= NULL;
 void (*tech_stkof_hook)(pcontext_t)	= NULL;
+plist_t cxtlist						= NULL;
 
 uint8 tmp_data[6];
 
@@ -61,13 +61,18 @@ void yield()
 
 void tech_init()
 {
-	MM_Init();
-
+	tech_memory_init();
 	tech_timerSysInit();
 	main_cxt = tech_cxt(NULL, NULL, MAX_STACK_SIZE);
 	current_cxt = main_cxt;
 
 	cxtlist = list_new();
+}
+
+void tech_drop()
+{
+	list_destroy(cxtlist);
+	tech_freeAll();
 }
 
 void tech_safe_call()
@@ -126,7 +131,7 @@ pcontext_t tech_cxt(void (*func)(void*), void* params, unsigned size)
 	pcontext_t p = (pcontext_t) Malloc(sizeof(context));
 	if (!p) return NULL;
 
-	p->stack_ptr = Malloc((uint32)(CXT_MIN_SIZE+size));
+	p->stack_ptr = Malloc(CXT_MIN_SIZE+size);
 	p->top_of_stack = p->stack_ptr;
 	p->stack_size = size;
 	p->func = func;
@@ -139,9 +144,8 @@ pcontext_t tech_cxt(void (*func)(void*), void* params, unsigned size)
 void tech_cxt_destroy(pcontext_t cxt)
 {
 	pnode_t node;
-	pcontext_t pcxt;
 
-	FreeMem(cxt->stack_ptr, (uint32)(CXT_MIN_SIZE+cxt->stack_size));
+	FreeMem((void*)cxt->stack_ptr, CXT_MIN_SIZE+cxt->stack_size);
 	FreeMem((void*)cxt, sizeof(context));
 	
 	node = list_find(cxtlist, &context_equal, cxt);
@@ -166,10 +170,11 @@ void tech_handle_crash()
 	pnode_t node;
 
 	if (tech_stkof_hook) {
-		tech_stkof_hook(current_cxt);
 		/* we are not going to destroy the context, the user will handle this */
 		node = list_find(cxtlist, &context_equal, current_cxt);
 		list_erase(cxtlist, node);
+		/* user hook */
+		tech_stkof_hook(current_cxt);
 	} else 
 		tech_cxt_destroy(current_cxt);
 
