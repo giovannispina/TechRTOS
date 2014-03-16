@@ -5,8 +5,8 @@ TechRTOS is a very simple cooperative RTOS for PIC18. It has a timersystem and a
 
 The dependencies for compiling the RTOS are:
 
-Time
-C_String
-MemManager
+* Time
+* C_String
+* MemManager
 
 A sample can be found in the same repository. Documentation will be provided as soon as I have free time. In the meantime, I hope you find the sample helpful.
