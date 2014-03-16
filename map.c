@@ -82,14 +82,14 @@ void map_insert(phashmap_t hm, void* key, void* value)
 	if (!hm->buckets[index]) {
 		hm->buckets[index] = list_new();
 		hm->buckets[index]->node_type = sizeof(hashnode_t);
-	}
+	} else {
+		for (node = hm->buckets[index]->first; node; node = node->next) {
+			item = (phashnode_t)node;
 
-	for (node = hm->buckets[index]->first; node; node = node->next) {
-		item = (phashnode_t)node;
-
-		if (!hm->cmp(item->key, key)) {
-			item->value = value;
-			return;
+			if (!hm->cmp(item->key, key)) {
+				item->value = value;
+				return;
+			}
 		}
 	}
 
@@ -104,6 +104,8 @@ void map_foreach(phashmap_t hm, void (*func)(void*, void*))
 	int16 i;
 
 	for (i = 0; i < hm->size; i++) {
+		if (!hm->buckets[i]) continue;
+
 		for (node = hm->buckets[i]->first; node; node = node->next) {
 			phashnode_t item = (phashnode_t)node;
 			func(item->key, item->value);
@@ -119,6 +121,7 @@ void map_erase(phashmap_t hm, pnode_t node)
 	item = (phashnode_t)node;
 	index = hm->hash(item->key, hm->size);
 
+	if (!hm->buckets[index]) return;
 	list_erase(hm->buckets[index], node);
 }
 
