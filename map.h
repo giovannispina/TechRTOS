@@ -30,7 +30,6 @@
 
 typedef struct hashnode_t {
 	node_t node;
-	void* key;
 	void* value;
 } hashnode_t;
 

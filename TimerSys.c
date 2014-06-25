@@ -158,7 +158,7 @@ void tech_incTime()
 				tm_current.md -= 30;
 				tm_current.mo = 0;
 
-				if (Tech_isLeapYear(tm_current.yy))
+				if (tech_isLeapYear(tm_current.yy))
 					leapyear = 1;
 				else leapyear = 0;
 			}
