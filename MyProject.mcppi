@@ -6,7 +6,7 @@ Value=-1
 [BUILD_TYPE]
 Value=0
 [ACTIVE_TAB]
-Value=assert.h
+Value=MyProject.c
 [USE_EEPROM]
 Value=0
 [USE_HEAP]
@@ -29,11 +29,7 @@ Count=0
 Count=0
 ActiveImageIndex=-1
 [OPENED_FILES]
-File0=MyProject.c
-File1=TechOS.c
-File2=memory.c
-File3=assert.h
-Count=4
+Count=0
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]
