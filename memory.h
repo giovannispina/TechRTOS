@@ -8,6 +8,6 @@ void *tech_malloc(uint32 size);
 void *tech_calloc(uint32 value, uint32 size);
 void tech_free(void *ptr);
 void *tech_realloc(void *ptr, uint32 size);
-void tech_freeAll();
+void tech_free_all();
 
 #endif /* __MEMORY_H__ */

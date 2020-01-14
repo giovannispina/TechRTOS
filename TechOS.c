@@ -1,4 +1,4 @@
-#include "TechRTOS.h"
+#include "TechOS.h"
 #include "CxtSwitchMacro.h"
 
 volatile pcontext_t current_cxt = NULL;
@@ -49,7 +49,7 @@ void tech_init()
 void tech_drop()
 {
     list_destroy(cxtlist);
-    tech_freeAll();
+    tech_free_all();
 }
 
 void tech_safe_call()

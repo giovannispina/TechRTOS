@@ -1342,7 +1342,7 @@ tech_cxt_destroy
 tech_cxtof_hook
 tech_drop
 tech_free
-tech_freeall
+tech_free_all
 tech_getmonth
 tech_getticks
 tech_gettimeofday

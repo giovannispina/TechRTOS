@@ -7,7 +7,7 @@
 #define enableInt() INTCON.GIEH = 1;
 
 #define sleep() { asm SLEEP; }
-#define reset() { STKPTR = 0; tech_freeAll(); asm goto 0x0; }
+#define reset() { STKPTR = 0; tech_free_all(); asm goto 0x0; }
 #define assert(a) { if (!a) {disableInt(); sleep(); reset();} }
 
 #endif /* __ASSERT_H__ */

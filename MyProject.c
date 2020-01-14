@@ -1,4 +1,4 @@
-#include "TechRTOS.h"
+#include "TechOS.h"
 
 #pragma funcall main task1
 #pragma funcall main task2
