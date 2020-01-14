@@ -29,7 +29,8 @@ Count=0
 Count=0
 ActiveImageIndex=-1
 [OPENED_FILES]
-Count=0
+File0=MyProject.c
+Count=1
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]
@@ -66,9 +67,7 @@ VECTOR_MODE=0
 IVT_BASE=00000008
 [EXPANDED_NODES]
 0=MyProject.mcppi
-1=Sources
-8=Header Files
-Count=3
+Count=1
 [LIB_EXPANDED_NODES]
 Count=1
 [PROGRAMMER_TYPE]
