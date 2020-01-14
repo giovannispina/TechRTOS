@@ -1,29 +1,4 @@
-/* Copyright (c) 2014, Giovanni Spina <giovanni@codeforfun.it>
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the uploader nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY GIOVANNI SPINA ``AS IS'' AND ANY
-* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL GIOVANNI SPINA BE LIABLE FOR ANY
-* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
-
-#include <TechRTOS.h>
+#include "TechRTOS.h"
 
 #pragma funcall main task1
 #pragma funcall main task2
@@ -45,117 +20,123 @@ sbit LCD_D7_Direction at TRISB3_bit;
 
 void Lcd_Clr_Line(uint8 line)
 {
-	Lcd_Out(line, 1, "                ");
+    Lcd_Out(line, 1, "                ");
 }
 
-int16 strlen_rom(const char* text)
+int16 strlen_rom(const char *text)
 {
-	int16 i;
-	for (i = 0; text[i] != '\0'; i++);
+    int16 i;
+    for (i = 0; text[i] != '\0'; i++)
+        ;
 
-	return i;
+    return i;
 }
 
-void strcpy_rom(char* dest, const char* src)
+void strcpy_rom(char *dest, const char *src)
 {
-	uint8 i;
-	for (i = 0; (dest[i] = src[i]) != '\0'; i++);
+    uint8 i;
+    for (i = 0; (dest[i] = src[i]) != '\0'; i++)
+        ;
 }
 
-void Lcd_OutText(uint8 var, char* text)
+void Lcd_OutText(uint8 var, char *text)
 {
-	if (var)
-		Lcd_Out(2, 1, text);
-	else Lcd_Clr_Line(2);
+    if (var)
+        Lcd_Out(2, 1, text);
+    else
+        Lcd_Clr_Line(2);
 }
 
-void task1(void* params)
+void task1(void *params)
 {
-	uint8* var = (uint8*) params;
-	const char text_rom[] = "TechRTOS:";
-	const char website_rom[] = "-codeforfun.it-";
+    uint8 *var = (uint8 *)params;
+    const char text_rom[] = "TechRTOS:";
+    const char website_rom[] = "-codeforfun.it-";
 
-	static char* website;
-	static char* text;
+    static char *website;
+    static char *text;
 
-	text = tech_malloc((strlen_rom(text_rom)+1)*sizeof(char));
-	strcpy_rom(text, text_rom);
+    text = tech_malloc((strlen_rom(text_rom) + 1) * sizeof(char));
+    strcpy_rom(text, text_rom);
 
-	website = tech_malloc((strlen_rom(website_rom)+1)*sizeof(char));
-	strcpy_rom(website, website_rom);
+    website = tech_malloc((strlen_rom(website_rom) + 1) * sizeof(char));
+    strcpy_rom(website, website_rom);
 
-	for (;; yield()) {
-		Lcd_OutText(*var, website);
-		Lcd_Out(1, 1, text);
-	}
+    for (;; yield())
+    {
+        Lcd_OutText(*var, website);
+        Lcd_Out(1, 1, text);
+    }
 }
 
-void task2(void* params)
+void task2(void *params)
 {
-	uint8* var = (uint8*) params;
-	uint32 ticks, current;
+    uint8 *var = (uint8 *)params;
+    uint32 ticks, current;
 
-	ticks = tech_getTicks();
-	for (;;) {
-		current = tech_getTicks();
+    ticks = tech_getTicks();
+    for (;;)
+    {
+        current = tech_getTicks();
 
-		if (current-ticks > 1000) {
-			ticks = current;
-			*var = !*var;
-			yield();
-		}
-	}
+        if (current - ticks > 1000)
+        {
+            ticks = current;
+            *var = !*var;
+            yield();
+        }
+    }
 }
 
 void interrupt()
 {
-	if (INTCON.T0IF)
-	{
-		tech_timer();
-		
-		INTCON.TMR0IE = 1;
-		INTCON.T0IF = 0;
-		TMR0L = 56;
-	}
+    if (INTCON.T0IF)
+    {
+        tech_timer();
+
+        INTCON.TMR0IE = 1;
+        INTCON.T0IF = 0;
+        TMR0L = 56;
+    }
 }
 
-void main() 
+void main()
 {
-	uint8 resource;
+    uint8 resource;
 
-	pcontext_t p2;
-	pcontext_t p1;
+    pcontext_t p2;
+    pcontext_t p1;
 
-	// timer settings
-	TMR0L = 56;
-	TMR0H = 0;
-	T0CON.PSA = 1;
-	T0CON.T0PS0 = 0;
-	T0CON.T0PS1 = 0;
-	T0CON.T0PS2 = 0;
-	T0CON.T0CS = 0;
-	T0CON.T0SE = 0;
-	T0CON.T08BIT = 1;
+    // timer settings
+    TMR0L = 56;
+    TMR0H = 0;
+    T0CON.PSA = 1;
+    T0CON.T0PS0 = 0;
+    T0CON.T0PS1 = 0;
+    T0CON.T0PS2 = 0;
+    T0CON.T0CS = 0;
+    T0CON.T0SE = 0;
+    T0CON.T08BIT = 1;
 
-	// techRTOS init
-	tech_init();
-	tech_setInc(100); // 100 us
+    // techRTOS init
+    tech_init();
+    tech_setInc(100); // 100 us
 
-	// enable interrupts
-	T0CON.TMR0ON = 1;
-	INTCON.GIE = 1;
-	INTCON.TMR0IE = 1;
-	INTCON.T0IF = 0;
+    // enable interrupts
+    T0CON.TMR0ON = 1;
+    INTCON.GIE = 1;
+    INTCON.TMR0IE = 1;
+    INTCON.T0IF = 0;
 
-	Lcd_Init();
-	Lcd_Cmd(_LCD_CLEAR);
-	Lcd_Cmd(_LCD_CURSOR_OFF);
+    Lcd_Init();
+    Lcd_Cmd(_LCD_CLEAR);
+    Lcd_Cmd(_LCD_CURSOR_OFF);
 
-	resource = 1;
+    resource = 1;
 
-	p1 = tech_cxt(&task1, &resource, 5);
-	p2 = tech_cxt(&task2, &resource, 5);
+    p1 = tech_cxt(&task1, &resource, 5);
+    p2 = tech_cxt(&task2, &resource, 5);
 
-	tech_run();
-	tech_drop();
+    tech_run();
+    tech_drop();
 }
