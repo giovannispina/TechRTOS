@@ -50,8 +50,8 @@ void Lcd_OutText(uint8 var, char *text)
 void task1(void *params)
 {
     uint8 *var = (uint8 *)params;
-    const char text_rom[] = "TechRTOS:";
-    const char website_rom[] = "-codeforfun.it-";
+    const char text_rom[] = "TechOS:";
+    const char website_rom[] = "-Blinking Text-";
 
     static char *website;
     static char *text;
