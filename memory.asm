@@ -1,8 +1,8 @@
 
 _compare:
 
-;memory.c,30 :: 		int16 compare(void* ptr, void* ptr2)
-;memory.c,32 :: 		return (ptr == ptr2) ? 0 : 1;
+;memory.c,5 :: 		int16 compare(void *ptr, void *ptr2)
+;memory.c,7 :: 		return (ptr == ptr2) ? 0 : 1;
 	MOVF        FARG_compare_ptr+1, 0 
 	XORWF       FARG_compare_ptr2+1, 0 
 	BTFSS       STATUS+0, 2 
@@ -24,17 +24,17 @@ L_compare1:
 	BTFSC       R2, 7 
 	MOVLW       255
 	MOVWF       R1 
-;memory.c,33 :: 		}
+;memory.c,8 :: 		}
 L_end_compare:
 	RETURN      0
 ; end of _compare
 
 _tech_memory_init:
 
-;memory.c,35 :: 		void tech_memory_init()
-;memory.c,37 :: 		MM_Init();
+;memory.c,10 :: 		void tech_memory_init()
+;memory.c,12 :: 		MM_Init();
 	CALL        _MM_Init+0, 0
-;memory.c,39 :: 		memory = map_create(10, NULL, &compare);
+;memory.c,14 :: 		memory = map_create(10, NULL, &compare);
 	MOVLW       10
 	MOVWF       FARG_map_create_size+0 
 	MOVLW       0
@@ -56,15 +56,15 @@ _tech_memory_init:
 	MOVWF       _memory+0 
 	MOVF        R1, 0 
 	MOVWF       _memory+1 
-;memory.c,40 :: 		}
+;memory.c,15 :: 		}
 L_end_tech_memory_init:
 	RETURN      0
 ; end of _tech_memory_init
 
 _tech_malloc:
 
-;memory.c,42 :: 		void* tech_malloc(uint32 size)
-;memory.c,46 :: 		ptr = Malloc(size);
+;memory.c,17 :: 		void *tech_malloc(uint32 size)
+;memory.c,21 :: 		ptr = Malloc(size);
 	MOVF        FARG_tech_malloc_size+0, 0 
 	MOVWF       FARG_Malloc_Size+0 
 	MOVF        FARG_tech_malloc_size+1, 0 
@@ -74,7 +74,7 @@ _tech_malloc:
 	MOVWF       tech_malloc_ptr_L0+0 
 	MOVF        R1, 0 
 	MOVWF       tech_malloc_ptr_L0+1 
-;memory.c,47 :: 		assert (ptr);
+;memory.c,22 :: 		assert(ptr);
 	MOVF        R0, 0 
 	IORWF       R1, 0 
 	BTFSS       STATUS+0, 2 
@@ -85,7 +85,7 @@ _tech_malloc:
 	CALL        _tech_freeAll+0, 0
 	GOTO        0
 L_tech_malloc2:
-;memory.c,49 :: 		map_insert(memory, ptr, (void*)size);
+;memory.c,24 :: 		map_insert(memory, ptr, (void *)size);
 	MOVF        _memory+0, 0 
 	MOVWF       FARG_map_insert_hm+0 
 	MOVF        _memory+1, 0 
@@ -99,20 +99,20 @@ L_tech_malloc2:
 	MOVF        FARG_tech_malloc_size+1, 0 
 	MOVWF       FARG_map_insert_value+1 
 	CALL        _map_insert+0, 0
-;memory.c,50 :: 		return ptr;
+;memory.c,25 :: 		return ptr;
 	MOVF        tech_malloc_ptr_L0+0, 0 
 	MOVWF       R0 
 	MOVF        tech_malloc_ptr_L0+1, 0 
 	MOVWF       R1 
-;memory.c,51 :: 		}
+;memory.c,26 :: 		}
 L_end_tech_malloc:
 	RETURN      0
 ; end of _tech_malloc
 
 _tech_calloc:
 
-;memory.c,53 :: 		void* tech_calloc(uint32 value, uint32 size)
-;memory.c,57 :: 		ptr = Malloc(size);
+;memory.c,28 :: 		void *tech_calloc(uint32 value, uint32 size)
+;memory.c,32 :: 		ptr = Malloc(size);
 	MOVF        FARG_tech_calloc_size+0, 0 
 	MOVWF       FARG_Malloc_Size+0 
 	MOVF        FARG_tech_calloc_size+1, 0 
@@ -122,7 +122,7 @@ _tech_calloc:
 	MOVWF       tech_calloc_ptr_L0+0 
 	MOVF        R1, 0 
 	MOVWF       tech_calloc_ptr_L0+1 
-;memory.c,58 :: 		assert (ptr);
+;memory.c,33 :: 		assert(ptr);
 	MOVF        R0, 0 
 	IORWF       R1, 0 
 	BTFSS       STATUS+0, 2 
@@ -133,7 +133,7 @@ _tech_calloc:
 	CALL        _tech_freeAll+0, 0
 	GOTO        0
 L_tech_calloc3:
-;memory.c,60 :: 		memset(ptr, value, size);
+;memory.c,35 :: 		memset(ptr, value, size);
 	MOVF        tech_calloc_ptr_L0+0, 0 
 	MOVWF       FARG_memset_p1+0 
 	MOVF        tech_calloc_ptr_L0+1, 0 
@@ -145,7 +145,7 @@ L_tech_calloc3:
 	MOVF        FARG_tech_calloc_size+1, 0 
 	MOVWF       FARG_memset_n+1 
 	CALL        _memset+0, 0
-;memory.c,61 :: 		map_insert(memory, ptr, (void*)size);
+;memory.c,36 :: 		map_insert(memory, ptr, (void *)size);
 	MOVF        _memory+0, 0 
 	MOVWF       FARG_map_insert_hm+0 
 	MOVF        _memory+1, 0 
@@ -159,20 +159,20 @@ L_tech_calloc3:
 	MOVF        FARG_tech_calloc_size+1, 0 
 	MOVWF       FARG_map_insert_value+1 
 	CALL        _map_insert+0, 0
-;memory.c,62 :: 		return ptr;
+;memory.c,37 :: 		return ptr;
 	MOVF        tech_calloc_ptr_L0+0, 0 
 	MOVWF       R0 
 	MOVF        tech_calloc_ptr_L0+1, 0 
 	MOVWF       R1 
-;memory.c,63 :: 		}
+;memory.c,38 :: 		}
 L_end_tech_calloc:
 	RETURN      0
 ; end of _tech_calloc
 
 _tech_free:
 
-;memory.c,65 :: 		void tech_free(void* ptr)
-;memory.c,69 :: 		node = map_find(memory, ptr);
+;memory.c,40 :: 		void tech_free(void *ptr)
+;memory.c,44 :: 		node = map_find(memory, ptr);
 	MOVF        _memory+0, 0 
 	MOVWF       FARG_map_find_hm+0 
 	MOVF        _memory+1, 0 
@@ -186,7 +186,7 @@ _tech_free:
 	MOVWF       tech_free_node_L0+0 
 	MOVF        R1, 0 
 	MOVWF       tech_free_node_L0+1 
-;memory.c,70 :: 		assert (node);
+;memory.c,45 :: 		assert(node);
 	MOVF        R0, 0 
 	IORWF       R1, 0 
 	BTFSS       STATUS+0, 2 
@@ -197,7 +197,7 @@ _tech_free:
 	CALL        _tech_freeAll+0, 0
 	GOTO        0
 L_tech_free4:
-;memory.c,71 :: 		FreeMem(ptr, (uint32)node->value);
+;memory.c,46 :: 		FreeMem(ptr, (uint32)node->value);
 	MOVF        FARG_tech_free_ptr+0, 0 
 	MOVWF       FARG_FreeMem_P+0 
 	MOVF        FARG_tech_free_ptr+1, 0 
@@ -220,15 +220,15 @@ L_tech_free4:
 	MOVF        R1, 0 
 	MOVWF       FARG_FreeMem_Size+1 
 	CALL        _FreeMem+0, 0
-;memory.c,72 :: 		}
+;memory.c,47 :: 		}
 L_end_tech_free:
 	RETURN      0
 ; end of _tech_free
 
 _tech_realloc:
 
-;memory.c,74 :: 		void* tech_realloc(void* ptr, uint32 size)
-;memory.c,77 :: 		new_ptr = tech_malloc(size);
+;memory.c,49 :: 		void *tech_realloc(void *ptr, uint32 size)
+;memory.c,52 :: 		new_ptr = tech_malloc(size);
 	MOVF        FARG_tech_realloc_size+0, 0 
 	MOVWF       FARG_tech_malloc_size+0 
 	MOVF        FARG_tech_realloc_size+1, 0 
@@ -242,7 +242,7 @@ _tech_realloc:
 	MOVWF       tech_realloc_new_ptr_L0+0 
 	MOVF        R1, 0 
 	MOVWF       tech_realloc_new_ptr_L0+1 
-;memory.c,79 :: 		memcpy(new_ptr, ptr, size);
+;memory.c,54 :: 		memcpy(new_ptr, ptr, size);
 	MOVF        R0, 0 
 	MOVWF       FARG_memcpy_d1+0 
 	MOVF        R1, 0 
@@ -256,34 +256,34 @@ _tech_realloc:
 	MOVF        FARG_tech_realloc_size+1, 0 
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-;memory.c,80 :: 		tech_free(ptr);
+;memory.c,55 :: 		tech_free(ptr);
 	MOVF        FARG_tech_realloc_ptr+0, 0 
 	MOVWF       FARG_tech_free_ptr+0 
 	MOVF        FARG_tech_realloc_ptr+1, 0 
 	MOVWF       FARG_tech_free_ptr+1 
 	CALL        _tech_free+0, 0
-;memory.c,81 :: 		return new_ptr;
+;memory.c,56 :: 		return new_ptr;
 	MOVF        tech_realloc_new_ptr_L0+0, 0 
 	MOVWF       R0 
 	MOVF        tech_realloc_new_ptr_L0+1, 0 
 	MOVWF       R1 
-;memory.c,82 :: 		}
+;memory.c,57 :: 		}
 L_end_tech_realloc:
 	RETURN      0
 ; end of _tech_realloc
 
 _tech_freeAll:
 
-;memory.c,84 :: 		void tech_freeAll()
-;memory.c,86 :: 		map_destroy(memory);
+;memory.c,59 :: 		void tech_freeAll()
+;memory.c,61 :: 		map_destroy(memory);
 	MOVF        _memory+0, 0 
 	MOVWF       FARG_map_destroy_hm+0 
 	MOVF        _memory+1, 0 
 	MOVWF       FARG_map_destroy_hm+1 
 	CALL        _map_destroy+0, 0
-;memory.c,87 :: 		MM_TotalFreeMemSize();
+;memory.c,62 :: 		MM_TotalFreeMemSize();
 	CALL        _MM_TotalFreeMemSize+0, 0
-;memory.c,88 :: 		}
+;memory.c,63 :: 		}
 L_end_tech_freeAll:
 	RETURN      0
 ; end of _tech_freeAll

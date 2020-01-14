@@ -19,7 +19,7 @@ extern long Time_jd1970 ;
 #line 49 "x:/techrtos/timelib.h"
 long Time_dateToEpoch(TimeStruct *ts) ;
 void Time_epochToDate(long e, TimeStruct *ts) ;
-#line 32 "x:/techrtos/timersys.h"
+#line 7 "x:/techrtos/timersys.h"
 typedef struct timeval
 {
   signed long  tv_sec;
@@ -32,74 +32,78 @@ void tech_timerSysInit();
 void tech_setInc( unsigned long );
 void tech_timer();
  unsigned char  tech_isLeapYear( unsigned int );
-void tech_gettimeofday(timeval_t*);
+void tech_gettimeofday(timeval_t *);
  unsigned long  tech_getTicks();
- unsigned long  tech_time(time_t*);
+ unsigned long  tech_time(time_t *);
  unsigned char  tech_weekday();
-const char* tech_getMonth( unsigned char );
-void tech_setTime(time_t*);
+const char *tech_getMonth( unsigned char );
+void tech_setTime(time_t *);
 #line 1 "x:/techrtos/assert.h"
 #line 1 "x:/techrtos/memory.h"
 #line 1 "x:/techrtos/map.h"
 #line 1 "x:/techrtos/list.h"
 #line 1 "x:/techrtos/types.h"
-#line 31 "x:/techrtos/list.h"
-typedef struct node_t {
- struct node_t* next;
- struct node_t* previous;
- void* pdata;
+#line 6 "x:/techrtos/list.h"
+typedef struct node_t
+{
+ struct node_t *next;
+ struct node_t *previous;
+ void *pdata;
 } node_t;
 
-typedef node_t* pnode_t;
+typedef node_t *pnode_t;
 
-typedef struct list_t {
+typedef struct list_t
+{
  pnode_t first;
  pnode_t last;
   unsigned int  size;
   unsigned int  node_type;
 } list_t;
 
-typedef struct list_t* plist_t;
+typedef struct list_t *plist_t;
 
 plist_t list_new();
 void list_destroy(plist_t list);
  unsigned int  list_size(plist_t list);
 pnode_t list_begin(plist_t list);
-pnode_t list_insert(plist_t list, void* pdata);
-pnode_t list_insert_after(plist_t list, pnode_t node, void* pdata);
+pnode_t list_insert(plist_t list, void *pdata);
+pnode_t list_insert_after(plist_t list, pnode_t node, void *pdata);
  unsigned char  list_erase(plist_t list, pnode_t node);
-void list_foreach(plist_t list, void (*func)(void*));
-pnode_t list_find(plist_t list, int (*func)(void*, void*), void* pdata);
-#line 31 "x:/techrtos/map.h"
-typedef struct hashnode_t {
+void list_foreach(plist_t list, void (*func)(void *));
+pnode_t list_find(plist_t list, int (*func)(void *, void *), void *pdata);
+#line 6 "x:/techrtos/map.h"
+typedef struct hashnode_t
+{
  node_t node;
- void* value;
+ void *value;
 } hashnode_t;
 
-typedef hashnode_t* phashnode_t;
+typedef hashnode_t *phashnode_t;
 
-typedef struct hashmap_t {
- plist_t* buckets;
+typedef struct hashmap_t
+{
+ plist_t *buckets;
   signed int  size;
   signed int  count;
-  signed int  (*hash)(void*,  signed int );
-  signed int  (*cmp)(void*, void*);
+  signed int  (*hash)(void *,  signed int );
+  signed int  (*cmp)(void *, void *);
 } hashmap_t;
 
-typedef hashmap_t* phashmap_t;
+typedef hashmap_t *phashmap_t;
 
-phashmap_t map_create( unsigned int  size,  signed int  (*hash)(void*,  signed int ),  signed int  (*cmp)(void*, void*));
-phashnode_t map_find(phashmap_t hm, void* key);
-void map_insert(phashmap_t hm, void* key, void* value);
-void map_foreach(phashmap_t hm, void (*func)(void*, void*));
-void map_erase(phashmap_t hm, void* key);
+phashmap_t map_create( unsigned int  size,  signed int  (*hash)(void *,  signed int ),  signed int  (*cmp)(void *, void *));
+phashnode_t map_find(phashmap_t hm, void *key);
+void map_insert(phashmap_t hm, void *key, void *value);
+void map_foreach(phashmap_t hm, void (*func)(void *, void *));
+void map_erase(phashmap_t hm, void *key);
 void map_destroy(phashmap_t hm);
-#line 31 "x:/techrtos/memory.h"
+#line 6 "x:/techrtos/memory.h"
 void tech_memory_init();
-void* tech_malloc( unsigned long  size);
-void* tech_calloc( unsigned long  value,  unsigned long  size);
-void tech_free(void* ptr);
-void* tech_realloc(void* ptr,  unsigned long  size);
+void *tech_malloc( unsigned long  size);
+void *tech_calloc( unsigned long  value,  unsigned long  size);
+void tech_free(void *ptr);
+void *tech_realloc(void *ptr,  unsigned long  size);
 void tech_freeAll();
 #line 7 "x:/techrtos/techrtos.h"
 typedef struct context
@@ -124,7 +128,7 @@ void tech_set_cxt(pcontext_t);
 void tech_cxtof_hook(void (*)(pcontext_t));
 #pragma funcall main task1
 #pragma funcall main task2
-#line 31 "X:/TechRTOS/MyProject.c"
+#line 6 "X:/TechRTOS/MyProject.c"
 sbit LCD_RS at LATB4_bit;
 sbit LCD_EN at LATB5_bit;
 sbit LCD_D4 at LATB0_bit;
@@ -145,58 +149,64 @@ void Lcd_Clr_Line( unsigned char  line)
  Lcd_Out(line, 1, "                ");
 }
 
- signed int  strlen_rom(const char* text)
+ signed int  strlen_rom(const char *text)
 {
   signed int  i;
- for (i = 0; text[i] != '\0'; i++);
+ for (i = 0; text[i] != '\0'; i++)
+ ;
 
  return i;
 }
 
-void strcpy_rom(char* dest, const char* src)
+void strcpy_rom(char *dest, const char *src)
 {
   unsigned char  i;
- for (i = 0; (dest[i] = src[i]) != '\0'; i++);
+ for (i = 0; (dest[i] = src[i]) != '\0'; i++)
+ ;
 }
 
-void Lcd_OutText( unsigned char  var, char* text)
+void Lcd_OutText( unsigned char  var, char *text)
 {
  if (var)
  Lcd_Out(2, 1, text);
- else Lcd_Clr_Line(2);
+ else
+ Lcd_Clr_Line(2);
 }
 
-void task1(void* params)
+void task1(void *params)
 {
-  unsigned char * var = ( unsigned char *) params;
+  unsigned char  *var = ( unsigned char  *)params;
  const char text_rom[] = "TechRTOS:";
  const char website_rom[] = "-codeforfun.it-";
 
- static char* website;
- static char* text;
+ static char *website;
+ static char *text;
 
- text = tech_malloc((strlen_rom(text_rom)+1)*sizeof(char));
+ text = tech_malloc((strlen_rom(text_rom) + 1) * sizeof(char));
  strcpy_rom(text, text_rom);
 
- website = tech_malloc((strlen_rom(website_rom)+1)*sizeof(char));
+ website = tech_malloc((strlen_rom(website_rom) + 1) * sizeof(char));
  strcpy_rom(website, website_rom);
 
- for (;; yield()) {
+ for (;; yield())
+ {
  Lcd_OutText(*var, website);
  Lcd_Out(1, 1, text);
  }
 }
 
-void task2(void* params)
+void task2(void *params)
 {
-  unsigned char * var = ( unsigned char *) params;
+  unsigned char  *var = ( unsigned char  *)params;
   unsigned long  ticks, current;
 
  ticks = tech_getTicks();
- for (;;) {
+ for (;;)
+ {
  current = tech_getTicks();
 
- if (current-ticks > 1000) {
+ if (current - ticks > 1000)
+ {
  ticks = current;
  *var = !*var;
  yield();

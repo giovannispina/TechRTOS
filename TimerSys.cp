@@ -18,7 +18,7 @@ extern long Time_jd1970 ;
 #line 49 "x:/techrtos/timelib.h"
 long Time_dateToEpoch(TimeStruct *ts) ;
 void Time_epochToDate(long e, TimeStruct *ts) ;
-#line 32 "x:/techrtos/timersys.h"
+#line 7 "x:/techrtos/timersys.h"
 typedef struct timeval
 {
   signed long  tv_sec;
@@ -31,13 +31,13 @@ void tech_timerSysInit();
 void tech_setInc( unsigned long );
 void tech_timer();
  unsigned char  tech_isLeapYear( unsigned int );
-void tech_gettimeofday(timeval_t*);
+void tech_gettimeofday(timeval_t *);
  unsigned long  tech_getTicks();
- unsigned long  tech_time(time_t*);
+ unsigned long  tech_time(time_t *);
  unsigned char  tech_weekday();
-const char* tech_getMonth( unsigned char );
-void tech_setTime(time_t*);
-#line 30 "X:/TechRTOS/TimerSys.c"
+const char *tech_getMonth( unsigned char );
+void tech_setTime(time_t *);
+#line 5 "X:/TechRTOS/TimerSys.c"
 enum Month
 {
  January,
@@ -103,7 +103,8 @@ void tech_incTime()
 
  if (tm_current.wd >= 6)
  tm_current.wd = 0;
- else tm_current.wd++;
+ else
+ tm_current.wd++;
 
  switch (tm_current.mo)
  {
@@ -149,7 +150,8 @@ void tech_incTime()
  tm_current.mo++;
  tm_current.md -= 29;
  }
- } else if (tm_current.md >= 28)
+ }
+ else if (tm_current.md >= 28)
  {
  tm_current.mo++;
  tm_current.md -= 28;
@@ -171,7 +173,8 @@ void tech_incTime()
 
  if (tech_isLeapYear(tm_current.yy))
  leapyear = 1;
- else leapyear = 0;
+ else
+ leapyear = 0;
  }
  break;
  }
@@ -227,7 +230,8 @@ void tech_gettimeofday(timeval_t *tv)
 
  if (t)
  memcpy(&ts, t, sizeof(time_t));
- else memcpy(&ts, &tm_current, sizeof(time_t));
+ else
+ memcpy(&ts, &tm_current, sizeof(time_t));
 
  epoch = Time_dateToEpoch(&ts);
 
@@ -237,13 +241,13 @@ void tech_gettimeofday(timeval_t *tv)
  unsigned char  tech_weekday()
 {
 
- const int t[] = { 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 };
+ const int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
   unsigned int  y;
   unsigned char  m;
  y = tm_current.yy;
  m = tm_current.mo;
  y -= m < 3;
- return (y + y/4 - y/100 + y/400 + t[m-1] + tm_current.wd) % 7;
+ return (y + y / 4 - y / 100 + y / 400 + t[m - 1] + tm_current.wd) % 7;
 }
 
 const char *tech_getMonth( unsigned char  month)
@@ -261,10 +265,10 @@ const char *tech_getMonth( unsigned char  month)
  {"September"},
  {"October"},
  {"November"},
- {"December"}
- };
+ {"December"}};
 
- if (month >= 12) return  0 ;
+ if (month >= 12)
+ return  0 ;
 
  return __MONTHS[month];
 }
