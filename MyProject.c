@@ -118,7 +118,7 @@ void main()
     T0CON.T0SE = 0;
     T0CON.T08BIT = 1;
 
-    // techRTOS init
+    // techOS init
     tech_init();
     tech_setInc(100); // 100 us
 
